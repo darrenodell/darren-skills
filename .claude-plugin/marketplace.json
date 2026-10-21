@@ -1,0 +1,14 @@
+{
+  "name": "darren-skills",
+  "description": "Darren Odell's personal skills for Claude",
+  "owner": {
+    "name": "Darren Odell"
+  },
+  "plugins": [
+    {
+      "name": "bible-study",
+      "source": "./plugins/bible-study",
+      "description": "Daily Bible study with a repeat-proof passage log and BibleGateway links"
+    }
+  ]
+}

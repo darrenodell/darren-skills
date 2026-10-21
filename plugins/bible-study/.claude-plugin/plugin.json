@@ -1,0 +1,12 @@
+{
+  "name": "bible-study",
+  "displayName": "Bible Study",
+  "version": "1.0.0",
+  "description": "Daily Bible study with a repeat-proof passage log and BibleGateway links",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "repository": "https://github.com/darrenodell/darren-skills",
+  "license": "MIT",
+  "keywords": ["bible", "devotional", "daily"]
+}
