@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 dist/
 .DS_Store
+.env
+.env.*
+/data/
+/reports/
+/review/

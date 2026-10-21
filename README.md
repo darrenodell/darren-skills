@@ -1,6 +1,6 @@
 # darren-skills
 
-Personal skills for Claude, packaged as a Claude Code plugin marketplace. The crypto plugin also includes a Codex marketplace catalog and portable plugin manifest. Skills with scripts need a runtime that can execute those scripts.
+Personal skills packaged as a Claude Code plugin marketplace. The crypto and stock plugins also include a Codex marketplace catalog and portable plugin manifests. Skills with scripts need a runtime that can execute those scripts.
 
 ## Skills
 
@@ -9,6 +9,8 @@ Personal skills for Claude, packaged as a Claude Code plugin marketplace. The cr
 | `bible-study` | `morning-bible-study` | Writes a short daily Bible study (passage, reflection, two questions, prayer) with a BibleGateway link. A bundled script checks every candidate passage against a log so nothing repeats, including single verses from passages already used. |
 | `crypto-research` | `coinbase-research` | Fetches public Coinbase USD-pair data, validates daily candles, calculates indicators, and prepares buying research reports, standalone HTML companions, or ChatGPT upload packets. Python 3.10+; no API keys or order tools. |
 | `crypto-research` | `html-research-report` | Formats completed research into an offline HTML report, then requests inspection by `report-reviewer`. |
+| `stock-research` | `alpaca-stock-research` | Uses Alpaca for validated stock/ETF snapshots, buying research, and an HTML/review handoff. Uses your own environment credentials. |
+| `stock-research` | `html-stock-report` | Formats completed stock research into standalone HTML and requests `stock-report-reviewer` inspection. |
 
 ## Download the crypto starter
 
@@ -24,6 +26,7 @@ The starter includes the crypto plugin, MacBook and Windows setup instructions, 
 /plugin marketplace add darrenodell/darren-skills
 /plugin install bible-study@darren-skills
 /plugin install crypto-research@darren-skills
+/plugin install stock-research@darren-skills
 ```
 
 The skill triggers on its own when you ask for a Bible study, or run it directly with `/bible-study:morning-bible-study`.
@@ -56,6 +59,24 @@ Python 3.10 or newer is required. The helper uses the Python standard library an
 
 Download `morning-bible-study.skill` from the latest release and add it to your skills, or zip the folder `plugins/bible-study/skills/morning-bible-study/` and upload that.
 
+## Alpaca stock research
+
+[Stock plugin setup and usage](plugins/stock-research/README.md). From a local clone:
+
+```sh
+codex plugin marketplace add .
+codex plugin add stock-research@darren-skills
+```
+
+Use your own `ALPACA_KEY` and `ALPACA_SECRET` in the inherited environment, as Wheel does. Never paste or commit keys. The collector reads Alpaca daily bars, stock snapshots and US calendar; it does not access accounts, holdings or orders. The default is IEX; SIP requires suitable access. Python 3.10+; Windows may also need `python -m pip install tzdata`.
+
+```text
+$stock-research:alpaca-stock-research AAPL buying report
+$stock-research:alpaca-stock-research Compare AAPL, MSFT and NVDA
+```
+
+The workflow is stock research → standalone HTML → stock-report-reviewer inspection. It uses 250 prior US trading sessions, adjusted daily bars and 252-day annualized volatility. The current New York day is always excluded, including after close. It labels IEX's single-exchange coverage and withholds current entry-price judgments for stale/closed-session observations. Company news, earnings, financials and valuation need current primary sources; missing work is explicitly labeled. This does not run Wheel or apply its candidate gates.
+
 ## HTML reports and inspection
 
 A normal buying-report request now runs `coinbase-research`, then the sibling `html-research-report` skill. It saves the original Markdown and a self-contained HTML companion with inline SVG price charts, source links, timestamps, and the full embedded snapshot. No remote fonts, assets, or JavaScript are required to read it. Source links require internet access.
@@ -86,7 +107,20 @@ plugins/
     skills/html-research-report/
       SKILL.md                      HTML and review handoff
       scripts/render_report.py      standalone HTML renderer
-.agents/plugins/marketplace.json   Codex catalog (crypto plugin)
+  stock-research/
+    plugin.json                     Codex manifest
+    .claude-plugin/plugin.json      Claude manifest
+    README.md                       setup and credentials guidance
+    agents/stock-report-reviewer.md
+    skills/alpaca-stock-research/
+      SKILL.md
+      report-prompt.md
+      references.md
+      scripts/fetch_snapshot.py
+    skills/html-stock-report/
+      SKILL.md
+      scripts/render_report.py
+.agents/plugins/marketplace.json   Codex catalog (crypto and stock plugins)
 tests/                              unit tests (kept out of the skill so it stays lean)
 ```
 

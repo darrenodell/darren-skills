@@ -1,0 +1,10 @@
+{
+  "name": "stock-research",
+  "version": "1.0.0",
+  "description": "Alpaca US-stock/ETF snapshots, buying research, self-contained HTML reports and inspection. Read-only market data.",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "repository": "https://github.com/darrenodell/darren-skills",
+  "license": "MIT"
+}

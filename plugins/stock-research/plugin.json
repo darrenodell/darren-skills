@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "stock-research",
+  "version": "1.0.0",
+  "description": "Alpaca US-stock/ETF snapshots, buying research, self-contained HTML reports and inspection. Read-only market data.",
+  "author": {
+    "name": "Darren Odell"
+  }
+}

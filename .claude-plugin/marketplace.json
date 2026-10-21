@@ -14,6 +14,11 @@
       "name": "crypto-research",
       "source": "./plugins/crypto-research",
       "description": "Coinbase public-data snapshots and evidence-based crypto buying research. No order tools."
+    },
+    {
+      "name": "stock-research",
+      "source": "./plugins/stock-research",
+      "description": "Alpaca US-stock/ETF snapshots, buying research, self-contained HTML reports and inspection. Read-only market data."
     }
   ]
 }
