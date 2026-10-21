@@ -9,6 +9,11 @@
       "name": "bible-study",
       "source": "./plugins/bible-study",
       "description": "Daily Bible study with a repeat-proof passage log and BibleGateway links"
+    },
+    {
+      "name": "crypto-research",
+      "source": "./plugins/crypto-research",
+      "description": "Coinbase public-data snapshots and evidence-based crypto buying research. No order tools."
     }
   ]
 }

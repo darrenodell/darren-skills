@@ -1,0 +1,20 @@
+{
+  "name": "darren-skills",
+  "interface": {
+    "displayName": "Darren Skills"
+  },
+  "plugins": [
+    {
+      "name": "crypto-research",
+      "source": {
+        "source": "local",
+        "path": "./plugins/crypto-research"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
