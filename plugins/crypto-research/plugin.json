@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "crypto-research",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Coinbase public-data snapshots and evidence-based crypto buying research. No order tools.",
   "author": {
     "name": "Darren Odell"

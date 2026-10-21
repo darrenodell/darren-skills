@@ -7,7 +7,8 @@ Personal skills for Claude, packaged as a Claude Code plugin marketplace. The cr
 | Plugin | Skill | What it does |
 |---|---|---|
 | `bible-study` | `morning-bible-study` | Writes a short daily Bible study (passage, reflection, two questions, prayer) with a BibleGateway link. A bundled script checks every candidate passage against a log so nothing repeats, including single verses from passages already used. |
-| `crypto-research` | `coinbase-research` | Fetches public Coinbase USD-pair data, validates daily candles, calculates indicators, and prepares buying research reports or ChatGPT upload packets. Python 3.10+; no API keys or order tools. |
+| `crypto-research` | `coinbase-research` | Fetches public Coinbase USD-pair data, validates daily candles, calculates indicators, and prepares buying research reports, standalone HTML companions, or ChatGPT upload packets. Python 3.10+; no API keys or order tools. |
+| `crypto-research` | `html-research-report` | Formats completed research into an offline HTML report, then requests inspection by `report-reviewer`. |
 
 ## Install
 
@@ -49,6 +50,14 @@ Python 3.10 or newer is required. The helper uses the Python standard library an
 
 Download `morning-bible-study.skill` from the latest release and add it to your skills, or zip the folder `plugins/bible-study/skills/morning-bible-study/` and upload that.
 
+## HTML reports and inspection
+
+A normal buying-report request now runs `coinbase-research`, then the sibling `html-research-report` skill. It saves the original Markdown and a self-contained HTML companion with inline SVG price charts, source links, timestamps, and the full embedded snapshot. No remote fonts, assets, or JavaScript are required to read it. Source links require internet access.
+
+The `report-reviewer` agent checks the source data, content preservation, offline resources, and desktop/phone rendering before delivery. Claude Code can discover its agent definition in `agents/`; other hosts may need explicit delegation or can perform the same checklist directly. A review must say when visual or independent checks could not be performed. This is an explicit skill handoff, not a global hook. Request “Markdown only” to skip it.
+
+Both HTML generation and review can also be invoked for an existing completed report and its matching snapshot. The renderer uses only Python's standard library. Test artifacts and personal reports stay outside this repository.
+
 ## Repository layout
 
 ```
@@ -63,10 +72,14 @@ plugins/
   crypto-research/
     plugin.json                     portable Codex plugin manifest
     .claude-plugin/plugin.json      Claude plugin manifest
+    agents/report-reviewer.md       inspection agent
     skills/coinbase-research/
       SKILL.md                      research workflow
       report-prompt.md              report requirements
       scripts/fetch_snapshot.py     public Coinbase data collector
+    skills/html-research-report/
+      SKILL.md                      HTML and review handoff
+      scripts/render_report.py      standalone HTML renderer
 .agents/plugins/marketplace.json   Codex catalog (crypto plugin)
 tests/                              unit tests (kept out of the skill so it stays lean)
 ```
