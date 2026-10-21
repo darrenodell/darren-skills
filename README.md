@@ -59,6 +59,12 @@ Python 3.10 or newer is required. The helper uses the Python standard library an
 
 Download `morning-bible-study.skill` from the latest release and add it to your skills, or zip the folder `plugins/bible-study/skills/morning-bible-study/` and upload that.
 
+## Download the stock starter
+
+[Download stock-research-starter.zip (v1.0.0)](https://github.com/darrenodell/darren-skills/releases/download/stock-research-v1.0.0/stock-research-starter.zip)
+
+The starter includes installation instructions for Mac/Windows, the stock plugin, HTML renderer, reviewer agent and 11 stock tests. Bring your own Alpaca keys. The standalone ZIP uses `stock-lab`; installation from this collection uses `darren-skills`.
+
 ## Alpaca stock research
 
 [Stock plugin setup and usage](plugins/stock-research/README.md). From a local clone:
