@@ -10,6 +10,12 @@ Personal skills for Claude, packaged as a Claude Code plugin marketplace. The cr
 | `crypto-research` | `coinbase-research` | Fetches public Coinbase USD-pair data, validates daily candles, calculates indicators, and prepares buying research reports, standalone HTML companions, or ChatGPT upload packets. Python 3.10+; no API keys or order tools. |
 | `crypto-research` | `html-research-report` | Formats completed research into an offline HTML report, then requests inspection by `report-reviewer`. |
 
+## Download the crypto starter
+
+[Download crypto-research-starter.zip (v1.1.0)](https://github.com/darrenodell/darren-skills/releases/download/v1.1.0/crypto-research-starter.zip)
+
+The starter includes the crypto plugin, MacBook and Windows setup instructions, collector, HTML renderer, reviewer agent, and tests. It retains the `crypto-lab` marketplace name used by the included installation guides. Installing from this repository instead uses `darren-skills` as shown below.
+
 ## Install
 
 **Claude Code**
