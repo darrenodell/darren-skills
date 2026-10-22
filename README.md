@@ -1,6 +1,6 @@
 # darren-skills
 
-Personal skills packaged as a Claude Code plugin marketplace. The crypto and stock plugins also include a Codex marketplace catalog and portable plugin manifests. Skills with scripts need a runtime that can execute those scripts.
+Personal skills packaged as a Claude plugin marketplace for Claude Code and the Claude desktop app's Cowork mode. Every plugin also has a Codex marketplace catalog entry and a portable plugin manifest. Skills with scripts need a runtime that can execute those scripts.
 
 ## Skills
 
@@ -30,6 +30,21 @@ The starter includes the crypto plugin, MacBook and Windows setup instructions, 
 ```
 
 The skill triggers on its own when you ask for a Bible study, or run it directly with `/bible-study:morning-bible-study`.
+
+**Claude desktop app (Cowork)**
+
+Cowork does not see plugins installed through the Claude Code CLI; it uses the plugins on your claude.ai account. In the desktop app, open the plugin settings, add a marketplace from GitHub with `darrenodell/darren-skills`, then install `bible-study` (and any other plugin you want). Start a new Cowork task afterwards so it picks up the skill.
+
+**Codex (bible study)**
+
+From a local clone of this repository:
+
+```bash
+codex plugin marketplace add .
+codex plugin add bible-study@darren-skills
+```
+
+Without memory tools, the skill keeps its log in `bible-study-log.md` in the working folder, so run it from the same folder each day.
 
 **Crypto research usage**
 
@@ -97,7 +112,8 @@ Both HTML generation and review can also be invoked for an existing completed re
 .claude-plugin/marketplace.json     the catalog Claude Code reads
 plugins/
   bible-study/
-    .claude-plugin/plugin.json      plugin name, version, author
+    plugin.json                     portable Codex plugin manifest
+    .claude-plugin/plugin.json      Claude plugin manifest
     skills/
       morning-bible-study/
         SKILL.md                    instructions Claude follows
@@ -126,7 +142,7 @@ plugins/
     skills/html-stock-report/
       SKILL.md
       scripts/render_report.py
-.agents/plugins/marketplace.json   Codex catalog (crypto and stock plugins)
+.agents/plugins/marketplace.json   Codex catalog (all plugins)
 tests/                              unit tests (kept out of the skill so it stays lean)
 ```
 
