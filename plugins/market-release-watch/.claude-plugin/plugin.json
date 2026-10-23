@@ -1,0 +1,10 @@
+{
+  "name": "market-release-watch",
+  "version": "1.0.0",
+  "description": "Verify U.S. economic release status, actuals versus consensus, and timestamped market reaction. Supports requested release alerts; no trade execution.",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "repository": "https://github.com/darrenodell/darren-skills",
+  "license": "MIT"
+}

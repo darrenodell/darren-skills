@@ -1,0 +1,4 @@
+interface:
+  display_name: "Market Release Watch"
+  short_description: "Check economic releases and their market reaction"
+  default_prompt: "Use $market-release-watch to check today’s U.S. economic releases, including Michigan sentiment, against expectations and timestamped market reaction."

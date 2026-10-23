@@ -19,6 +19,11 @@
       "name": "stock-research",
       "source": "./plugins/stock-research",
       "description": "Alpaca US-stock/ETF snapshots, buying research, self-contained HTML reports and inspection. Read-only market data."
+    },
+    {
+      "name": "market-release-watch",
+      "source": "./plugins/market-release-watch",
+      "description": "Verify U.S. economic release status, actuals versus consensus, and timestamped market reaction. Supports requested release alerts; no trade execution."
     }
   ]
 }

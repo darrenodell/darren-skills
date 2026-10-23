@@ -11,6 +11,7 @@ Personal skills packaged as a Claude plugin marketplace for Claude Code and the 
 | `crypto-research` | `html-research-report` | Formats completed research into an offline HTML report, then requests inspection by `report-reviewer`. |
 | `stock-research` | `alpaca-stock-research` | Uses Alpaca for validated stock/ETF snapshots, buying research, and an HTML/review handoff. Uses your own environment credentials. |
 | `stock-research` | `html-stock-report` | Formats completed stock research into standalone HTML and requests `stock-report-reviewer` inspection. |
+| `market-release-watch` | `market-release-watch` | Checks U.S. economic releases, including Michigan sentiment and inflation expectations, against schedules and consensus, then reports timestamped market reaction. Supports requested alerts where the host provides scheduling. |
 
 ## Download the crypto starter
 
@@ -27,6 +28,7 @@ The starter includes the crypto plugin, MacBook and Windows setup instructions, 
 /plugin install bible-study@darren-skills
 /plugin install crypto-research@darren-skills
 /plugin install stock-research@darren-skills
+/plugin install market-release-watch@darren-skills
 ```
 
 The skill triggers on its own when you ask for a Bible study, or run it directly with `/bible-study:morning-bible-study`.
@@ -98,6 +100,25 @@ $stock-research:alpaca-stock-research Compare AAPL, MSFT and NVDA
 
 The workflow is stock research → standalone HTML → stock-report-reviewer inspection. It uses 250 prior US trading sessions, adjusted daily bars and 252-day annualized volatility. The current New York day is always excluded, including after close. It labels IEX's single-exchange coverage and withholds current entry-price judgments for stale/closed-session observations. Company news, earnings, financials and valuation need current primary sources; missing work is explicitly labeled. This does not run Wheel or apply its candidate gates.
 
+## Market release watch
+
+From a local clone, install the plugin in Codex:
+
+```sh
+codex plugin marketplace add .
+codex plugin add market-release-watch@darren-skills
+```
+
+Run a fresh status check:
+
+```text
+$market-release-watch:market-release-watch Check today's U.S. economic releases, including Michigan sentiment.
+```
+
+In Claude Code, use `/market-release-watch:market-release-watch`. You can also ask for a timed watch or automatic release alerts. Automatic alerts require a host with scheduling support and must be requested separately; installing or invoking the skill does not create a background task. For local scheduled checks, keep the app running and the computer awake. One-minute polling is best effort and does not guarantee immediate notification or a trading advantage.
+
+The skill verifies report date, period and preliminary/final vintage, preserves sourced pre-release forecasts, and distinguishes verified results from secondary reports or unavailable data. Michigan inflation expectations are tracked separately from sentiment. Market reaction is an optional follow-up using fresh, comparable observations; quotes never delay the release alert. Release checks use public sources; connected market data is optional and may require a subscription. It does not place trades. Runtime state and personal automation settings stay in the working folder, outside the plugin.
+
 ## HTML reports and inspection
 
 A normal buying-report request now runs `coinbase-research`, then the sibling `html-research-report` skill. It saves the original Markdown and a self-contained HTML companion with inline SVG price charts, source links, timestamps, and the full embedded snapshot. No remote fonts, assets, or JavaScript are required to read it. Source links require internet access.
@@ -142,6 +163,13 @@ plugins/
     skills/html-stock-report/
       SKILL.md
       scripts/render_report.py
+  market-release-watch/
+    plugin.json                     Codex manifest
+    .claude-plugin/plugin.json      Claude manifest
+    skills/market-release-watch/
+      SKILL.md                      release verification and alert workflow
+      agents/openai.yaml            skill display metadata
+      references/sources.md         publisher and calendar entrypoints
 .agents/plugins/marketplace.json   Codex catalog (all plugins)
 tests/                              unit tests (kept out of the skill so it stays lean)
 ```
