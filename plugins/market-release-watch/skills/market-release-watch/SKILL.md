@@ -1,16 +1,18 @@
 ---
 name: market-release-watch
-description: Check today's U.S. economic releases, especially University of Michigan sentiment and inflation expectations, against schedules and consensus; report verified results and timestamped market reaction. Use for release status, economic-calendar checks, and requested release alerts. Does not execute trades.
+description: Check U.S. economic releases, retry missing due reports every three minutes, and produce a standalone HTML report led by an analyst's 1–5 BUY/SELL/WAIT signal. Use for Michigan sentiment, macro-release status, market read-through, and requested alerts. Does not execute trades.
 ---
 
 # Market Release Watch
 
 Give a fast, source-linked answer to: what is due, has it actually appeared, what surprised, and how markets have moved since the release? Default to U.S. macroeconomic reports. Include company earnings only for companies the user specifies. Never promise an execution advantage over professional feeds.
 
+The standard final deliverable is a self-contained HTML file plus its matching evidence/assessment JSON. Lead it with a beginner-readable 1–5 BUY/SELL/WAIT signal from `market-release-analyst`, then show the reports and sources. A chat-only response is available when explicitly requested. Keep initial release alerts short; creating the final HTML must not delay announcing a new verified result.
+
 ## Choose the requested mode
 
 - **Check now** (default): one fresh check, then return the result. Creating or invoking this skill alone does not activate monitoring.
-- **Timed watch**: when requested, check targeted sources on a best-effort 60-second cadence for the user's duration. If no duration is given, use 20 minutes and state the end time. Reuse the verified calendar and consensus rather than researching them every minute. Keep waits at 60 seconds or less and respect cancellation.
+- **Timed watch**: when requested, use best-effort 60-second checks around release times for the user's duration. Once a due report has been checked without a verified result, switch that report to a three-minute retry interval as described below. If no duration is given, use 20 minutes and state the end time. Reuse the verified calendar and consensus rather than researching them every minute. Keep waits at 60 seconds or less and respect cancellation.
 - **Automatic alerts**: only when requested, use the host's automation tool to create or update a heartbeat in this chat. Inspect matching automations first. Use the supported minute cadence around verified release windows, a finite expiry for a request about today, and a durable prompt invoking this skill. Confirm the schedule returned by the tool; if it rejects or changes the cadence, explain the actual limitation. Do not substitute a hidden daemon or system scheduler. A saved automation is not proof of a successful run or delivered notification.
 
 For monitoring, report newly verified results, material corrections, one concise initial source failure and its recovery, and a requested reaction follow-up. Stay quiet on unchanged/non-actionable checks. Do not turn a one-day watch into an indefinite daily task. Explain any requirement to keep the local app running and computer awake. Minute polling is best effort: source publication, caching, task runtime, and notification delivery add latency.
@@ -37,6 +39,14 @@ Use these statuses precisely:
 - **Rescheduled/cancelled**: explicitly announced by the publisher.
 - **Unable to verify**: access, freshness, or conflicting-source problem prevents a reliable status.
 
+### Missing-release retry rule
+
+Make the first result check at the scheduled time. If the report is due but the correct new result is absent, stale, blocked, or unverified, retry that report **every three minutes** until it is verified or the watch's agreed end time. Do not poll its sources every minute just because the chat heartbeat wakes every minute. Other reports with different due times still get their first check on time.
+
+Record the report's `last_attempt_at_utc` after each actual retrieval attempt and `next_retry_at_utc = last_attempt_at_utc + 180 seconds` when it remains unverified. Record status `due_not_verified` or `unable_to_verify`. Use `scripts/poll_plan.py --state <monitor-state.json>` before repeated result fetches; it prints the event IDs ready for a source check. State events use `id`, `scheduled_at_utc` (or legacy `due_et`), `status`, and `last_attempt_at_utc`; an optional `watch_end_at_utc` stops the plan at the deadline. If a heartbeat wakes less than 60 seconds before the next retry, it may wait the remaining seconds and re-evaluate the plan once, rather than adding another full minute of delay. Pre-release calendar/forecast reads do not delay the first check at the release time. If a host cannot schedule an exact three-minute retry, report the actual cadence and the next feasible retry rather than promising exact timing.
+
+Announce a missing due result once with WAIT and its next retry time. Repeated unchanged checks stay quiet. If a morning report is still unresolved, keep its three-minute retries going through the authorized watch window instead of sleeping until an unrelated afternoon release. Stop at the stated deadline, mark unresolved results, and do not turn "not found" into a fabricated release or announced postponement.
+
 For Michigan final releases, the preliminary result from the same month is a separate comparison from the previous month's final. Do not label the preliminary result as the new final. Report the sentiment revision versus preliminary as well as the monthly change where available. Treat 1-year and long-run inflation expectations separately; express changes in percentage points or basis points, not relative percent. If components are missing, alert on the verified headline first and label missing items pending.
 
 Lead a release alert with the verified result, consensus, numerical surprise (`actual - consensus` in matching units), and prior/revisions. Do not wait for an entire market-analysis essay or complete quote panel before reporting a new release. Then add one or two sentences of conditional interpretation. Avoid a mechanical "beat = bullish" rule: growth, inflation, and the current rate regime can conflict.
@@ -49,19 +59,35 @@ For post-release changes, compare observations from the same provider/feed and i
 
 Give observed changes separately from inferred causes. Concurrent releases and headlines can confound attribution. Yield changes use basis points; asset-price changes use percent. In a timed or automatic watch, provide one follow-up around five minutes after each release group when data are available, rather than a new alert for every price tick. Do not place orders or connect this skill to trade execution.
 
-## Keep output compact
+## Evaluate the signal and render the final report
 
-For a check, lead with **as-of ET / local time** and the next relevant release. Use a small table:
+Read [references/signal-rubric.md](references/signal-rubric.md) for the five signal levels and evidence/assessment JSON contract. Save the verified collector evidence under the current working folder, outside the installed plugin. Keep original facts and source qualifications intact.
+
+Delegate the judgment to the bundled `market-release-analyst` agent defined in [../../agents/market-release-analyst.md](../../agents/market-release-analyst.md) when the host supports agent delegation. A standalone skill can instead carry the same definition at `agents/market-release-analyst.md`. Supply the evidence JSON path and the rubric, not a desired BUY/SELL answer. Ask it to return only the assessment object. Claude Code can discover the plugin's `agents/` definition. Other hosts may need an explicit delegated task that reads the definition. If delegation is unavailable, evaluate the same rubric inline and set `evaluator` to `inline fallback`; never claim that an independent agent ran. A standalone skill installation without the plugin agent file can use this documented fallback.
+
+Use 1 STRONG SELL, 2 SELL, 3 WAIT, 4 BUY, 5 STRONG BUY. Default to SPY / broad U.S. equities over 30–120 minutes after the relevant release. Provide confidence, provisional/confirmed state, a simple action, reasons, a contrary risk, and a concrete condition that changes the call. Pending/unverified releases get WAIT. A verified report can support a provisional 2/5 or 4/5 before quotes are available; don't make quotes a requirement to provide a useful best guess. Reserve 1/5 and 5/5 for primary verified releases with material aligned evidence and fresh price confirmation. The score is not a win probability or an instruction to execute a trade.
+
+Combine the agent's assessment with the evidence as specified by the rubric. Run:
+
+```sh
+python3 <skill-folder>/scripts/render_report.py --input <working-folder>/market-release-report.json --out <output-folder>/market-release-report.html
+```
+
+Choose the user's requested output directory or the host's deliverables directory. Use a new snapshot filename instead of overwriting an earlier report. The renderer uses the Python standard library; Python 3.10+ is recommended, with `tzdata` installed if the host lacks IANA timezone data. It validates the input, escapes content, embeds the full JSON, and includes no remote assets or scripts. Preserve the matching JSON beside the HTML. Verify the actual file and inspect desktop and narrow-screen rendering when browser tools are available; disclose unavailable visual checks. Open/show the HTML and provide a direct file link. Do not substitute a chat table for the requested file.
+
+## Keep alerts and handoffs compact
+
+For the chat handoff and the HTML, lead with **BUY / SELL / WAIT — score/5**, confidence, as-of ET/local time, and the simple reason. The full file includes a release table:
 
 `Release / period & vintage | Due ET / local | Status | Actual | Consensus | Prior / revision`
 
 Link each result/schedule and consensus close to the claim. Add a short "What matters" paragraph and timestamped reaction only when available. State unresolved source gaps and next check/end time when monitoring. Say explicitly whether automatic alerts are active, merely requested, or failed to set up.
 
-For an alert, lead with **NEW RELEASE** or **CORRECTION**, event and vintage, then actual/consensus/prior, the inflation or growth detail that matters, source link, observed-at time, and any available reaction. Do not claim publication-to-alert latency if the publisher's precise release time is unknown.
+For a first release alert, announce **NEW RELEASE** or **CORRECTION**, event/vintage and actual/consensus/prior promptly. Run the analyst immediately and follow with its prominent signal, source links and the HTML report; label the assessment pending until it returns. At the five-minute follow-up, reevaluate against fresh price evidence and issue a signal update when the score/label/confirmation materially changes. Do not claim publication-to-alert latency if the publisher's precise release time is unknown.
 
 ## Preserve monitoring state
 
-For repeated checks, use a small JSON file under the current workspace's `work/market-release-watch/`, keyed by U.S. session date and chat/monitor identity. Use the same path in the automation prompt. Record calendar URLs, expected timestamps, pre-release consensus snapshot, last checked time, results with source/period/vintage/units, baseline quote timestamps/feed, source failures, and event fingerprints already reported in this chat. Record "reported in chat", not "notification delivered" unless delivery is confirmed.
+For repeated checks, use a small JSON file under the current workspace's `work/market-release-watch/`, keyed by U.S. session date and chat/monitor identity. Use the same path in the automation prompt. Record calendar URLs, expected timestamps, pre-release consensus snapshot, last checked time, per-event retrieval attempts/next three-minute retry times, results with source/period/vintage/units, baseline quote timestamps/feed, source failures, last assessment with its expiry, report paths, and event/signal fingerprints already reported in this chat. Record "reported in chat", not "notification delivered" unless delivery is confirmed.
 
 Fingerprint by event, period, vintage, metric and verified values, not the whole HTML page. Keep preliminary and final events distinct. A repeated unchanged value is not a duplicate of an older vintage; a correction to the same vintage merits a correction alert. If state is missing or inconsistent, recover from this chat and sources and disclose uncertainty rather than claiming exactly-once delivery. Avoid overlapping watch runs; write state atomically. Keep runtime state outside the installed skill and exclude it from shared skill bundles.
 

@@ -11,7 +11,7 @@ Personal skills packaged as a Claude plugin marketplace for Claude Code and the 
 | `crypto-research` | `html-research-report` | Formats completed research into an offline HTML report, then requests inspection by `report-reviewer`. |
 | `stock-research` | `alpaca-stock-research` | Uses Alpaca for validated stock/ETF snapshots, buying research, and an HTML/review handoff. Uses your own environment credentials. |
 | `stock-research` | `html-stock-report` | Formats completed stock research into standalone HTML and requests `stock-report-reviewer` inspection. |
-| `market-release-watch` | `market-release-watch` | Checks U.S. economic releases, including Michigan sentiment and inflation expectations, against schedules and consensus, then reports timestamped market reaction. Supports requested alerts where the host provides scheduling. |
+| `market-release-watch` | `market-release-watch` | Verifies U.S. economic releases, retries missing reports every three minutes, and uses a dedicated analyst to produce a 1–5 BUY/SELL/WAIT signal in a standalone HTML report. |
 
 ## Download the crypto starter
 
@@ -117,7 +117,19 @@ $market-release-watch:market-release-watch Check today's U.S. economic releases,
 
 In Claude Code, use `/market-release-watch:market-release-watch`. You can also ask for a timed watch or automatic release alerts. Automatic alerts require a host with scheduling support and must be requested separately; installing or invoking the skill does not create a background task. For local scheduled checks, keep the app running and the computer awake. One-minute polling is best effort and does not guarantee immediate notification or a trading advantage.
 
-The skill verifies report date, period and preliminary/final vintage, preserves sourced pre-release forecasts, and distinguishes verified results from secondary reports or unavailable data. Michigan inflation expectations are tracked separately from sentiment. Market reaction is an optional follow-up using fresh, comparable observations; quotes never delay the release alert. Release checks use public sources; connected market data is optional and may require a subscription. It does not place trades. Runtime state and personal automation settings stay in the working folder, outside the plugin.
+The final output is a self-contained HTML report and matching JSON evidence snapshot, styled like the stock/crypto reports. A prominent signal leads the report: **1 STRONG SELL, 2 SELL, 3 WAIT, 4 BUY, 5 STRONG BUY**, followed by confidence, a simple action, reasons and the condition that changes the call. The default scope is SPY / broad U.S. equities over the next 30–120 minutes after a release, subject to the next major catalyst.
+
+The bundled `market-release-analyst` agent evaluates source-backed actuals versus expectations, inflation/rate and growth implications, revisions, and fresh price confirmation when available. Hosts without delegation use the same rubric inline and disclose the fallback. Pending or unverifiable releases get WAIT. A report-only best guess can be provisional BUY/SELL with Low confidence; strong scores require primary verification and fresh market confirmation. This qualitative rubric has not been backtested and its score is not a win probability.
+
+The collector verifies date, period and preliminary/final vintage, preserves pre-release forecasts, and tracks Michigan inflation expectations separately from sentiment. If a scheduled release is due but not verified, it retries that report every **three minutes** until verification or the watch deadline. A deterministic polling helper prevents one-minute heartbeat wakes from repeatedly fetching the missing report. Quotes and HTML generation never delay the first factual release alert.
+
+Release checks use public sources; connected market data is optional and may require a subscription. The plugin can help users find and interpret new information quickly in a workflow similar to professional release monitoring, but public sources, polling and notifications may lag professional news/data feeds. It does not place trades. Runtime state, personal automation settings and generated reports stay outside the plugin.
+
+The HTML renderer uses the Python standard library (Python 3.10+ recommended; install `tzdata` if the host lacks IANA timezones). It validates signal/evidence consistency and embeds its source snapshot without external assets. Run it on the skill-generated JSON:
+
+```sh
+python3 plugins/market-release-watch/skills/market-release-watch/scripts/render_report.py --input /path/to/market-release-report.json --out /path/to/market-release-report.html
+```
 
 ## HTML reports and inspection
 
@@ -164,12 +176,16 @@ plugins/
       SKILL.md
       scripts/render_report.py
   market-release-watch/
-    plugin.json                     Codex manifest
+    plugin.json                     Codex manifest (v1.1.0)
     .claude-plugin/plugin.json      Claude manifest
+    agents/market-release-analyst.md
     skills/market-release-watch/
-      SKILL.md                      release verification and alert workflow
+      SKILL.md                      release verification, retries and report workflow
       agents/openai.yaml            skill display metadata
       references/sources.md         publisher and calendar entrypoints
+      references/signal-rubric.md    signal and evidence contract
+      scripts/poll_plan.py          three-minute retry gate
+      scripts/render_report.py      standalone HTML renderer
 .agents/plugins/marketplace.json   Codex catalog (all plugins)
 tests/                              unit tests (kept out of the skill so it stays lean)
 ```

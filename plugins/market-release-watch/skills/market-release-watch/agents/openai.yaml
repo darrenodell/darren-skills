@@ -1,4 +1,4 @@
 interface:
   display_name: "Market Release Watch"
-  short_description: "Check economic releases and their market reaction"
-  default_prompt: "Use $market-release-watch to check today’s U.S. economic releases, including Michigan sentiment, against expectations and timestamped market reaction."
+  short_description: "Economic releases, 1–5 signals, and HTML reports"
+  default_prompt: "Use $market-release-watch to check today’s U.S. economic releases, get the analyst’s BUY/SELL/WAIT signal, and save a standalone HTML report."

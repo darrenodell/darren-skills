@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "market-release-watch",
-  "version": "1.0.0",
-  "description": "Verify U.S. economic release status, actuals versus consensus, and timestamped market reaction. Supports requested release alerts; no trade execution.",
+  "version": "1.1.0",
+  "description": "Economic release checks, three-minute retries, a 1\u20135 BUY/SELL/WAIT analyst signal, and standalone HTML reports. Research only; no trade execution.",
   "author": {
     "name": "Darren Odell"
   }
