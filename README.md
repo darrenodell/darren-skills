@@ -12,6 +12,9 @@ Personal skills packaged as a Claude plugin marketplace for Claude Code and the 
 | `stock-research` | `alpaca-stock-research` | Uses Alpaca for validated stock/ETF snapshots, buying research, and an HTML/review handoff. Uses your own environment credentials. |
 | `stock-research` | `html-stock-report` | Formats completed stock research into standalone HTML and requests `stock-report-reviewer` inspection. |
 | `market-release-watch` | `market-release-watch` | Verifies U.S. economic releases, retries missing reports every three minutes, and uses a dedicated analyst to produce a 1–5 BUY/SELL/WAIT signal in a standalone HTML report. |
+| `market-conditions` | `market-conditions`, `market-context-integration`, `html-market-report` | Historical SIP/IEX benchmarks, primary macro evidence, a transparent market-backdrop rubric, optional attributed equity-research handoffs, standalone HTML and reviewer inspection. |
+
+See [market-conditions setup and source limits](plugins/market-conditions/README.md).
 
 ## Download the crypto starter
 
@@ -29,6 +32,7 @@ The starter includes the crypto plugin, MacBook and Windows setup instructions, 
 /plugin install crypto-research@darren-skills
 /plugin install stock-research@darren-skills
 /plugin install market-release-watch@darren-skills
+/plugin install market-conditions@darren-skills
 ```
 
 The skill triggers on its own when you ask for a Bible study, or run it directly with `/bible-study:morning-bible-study`.

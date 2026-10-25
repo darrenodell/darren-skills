@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "market-conditions",
+  "version": "1.0.0",
+  "description": "Historical US equity-market context with transparent evidence, optional research handoffs and offline reports.",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "license": "MIT"
+}

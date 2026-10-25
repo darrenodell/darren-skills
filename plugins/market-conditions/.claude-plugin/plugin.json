@@ -1,0 +1,9 @@
+{
+  "name": "market-conditions",
+  "version": "1.0.0",
+  "description": "Historical US market and technology-sector context, primary macro evidence, optional external research handoffs, standalone reports and review.",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "license": "MIT"
+}

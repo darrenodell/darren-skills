@@ -1,0 +1,16 @@
+---
+name: market-conditions
+description: Assess the historical US equity-market and technology-sector backdrop using Alpaca benchmarks and primary macro evidence, with horizon-specific context, offline HTML and review. Does not execute trades or supply live entry prices.
+---
+# Market conditions
+Use this plugin for a market backdrop before company research. Read [methodology](../../references/methodology.md) before collection and [handoff](../../references/handoff.md) when combining reports. Resolve scripts relative to this plugin, never a cached machine-specific location.
+
+1. Choose an external workspace, reread its profile/watchlist when relevant, and verify inherited runtime credentials with a small read-only request. Never print, save or ask for secrets. Core collection needs no paid consensus provider.
+2. Gather current primary policy/release/event and sector evidence. Keep fact, inference and assumptions separate; record publication, event and retrieval times. Write optional `context.json` as documented in methodology. Explain rates/growth/inflation transmission to equities, upcoming confirmed versus estimated catalysts, and tech/semiconductor earnings/AI spending/power/financing implications when sourced. Label absent valuation, revisions, flows and actual breadth. Do not let technical metrics stand in for company fundamentals.
+3. Run `python3 <plugin>/scripts/market.py run --workspace <external-folder> --feed sip --allow-iex-fallback --context <context.json>`. Omit context only for a disclosed quantitative baseline. Historical SIP is preferred; fallback explicitly retries the whole set using IEX. The prior 250 NY exchange sessions exclude the current NY day even after close. No latest snapshots, accounts or orders are requested.
+4. Inspect snapshot, manifest, analysis and source index. A required missing/stale series forces INSUFFICIENT EVIDENCE. Repair actual source failures or preserve PARTIAL; never weaken gates. Labels are historical unvalidated heuristic context, not market-timing probabilities.
+5. Compare the last valid same-feed/same-benchmark handoff; explain changed data/conclusions, or unchanged price sessions. Verify primary context alongside the price label; a material contradictory macro/sector finding must be discussed, not silently forced into the heuristic. Distinguish 3–6 months from one year or more.
+6. Use the bundled market-context-integration skill for optional external research, then html-market-report for the matching Markdown/HTML and reviewer. Public Equity Investing can contribute specific event, catalyst, earnings, valuation or thesis reports if separately available, but cannot be required for core completion. Do not copy its proprietary resources or assume its tools/auth transfer across hosts.
+7. Save the inspection receipt, repair confirmed defects and review again. Update handoff/manifest review fields from the actual receipt, never an assumed pass. Return report, sources, assessment, coverage, horizon implications and review independence. No schedule or trade is implied.
+
+The script emits a report and pending-review status, not a completed independent inspection. Keep user inputs and live artifacts outside the plugin/repository. Preserve existing stock-research collection → HTML → reviewer contracts, feed defaults, history policies and max-10 batching.

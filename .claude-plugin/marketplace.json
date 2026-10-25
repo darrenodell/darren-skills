@@ -24,6 +24,11 @@
       "name": "market-release-watch",
       "source": "./plugins/market-release-watch",
       "description": "Economic release checks, three-minute retries, a 1\u20135 BUY/SELL/WAIT analyst signal, and standalone HTML reports. Research only; no trade execution."
+    },
+    {
+      "name": "market-conditions",
+      "source": "./plugins/market-conditions",
+      "description": "Historical US market and technology-sector context, optional research handoffs, offline reports and review."
     }
   ]
 }
