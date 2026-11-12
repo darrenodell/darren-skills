@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "options-pin-zone",
+  "version": "1.0.0",
+  "description": "Max pain strike, open interest walls and likely pin zone for a ticker and option expiration. Research only; no trade execution.",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "license": "MIT"
+}

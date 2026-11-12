@@ -29,6 +29,11 @@
       "name": "market-conditions",
       "source": "./plugins/market-conditions",
       "description": "Historical US market and technology-sector context, optional research handoffs, offline reports and review."
+    },
+    {
+      "name": "options-pin-zone",
+      "source": "./plugins/options-pin-zone",
+      "description": "Max pain strike, open interest walls and likely pin zone for a ticker and option expiration. Research only; no trade execution."
     }
   ]
 }

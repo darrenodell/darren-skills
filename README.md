@@ -13,8 +13,9 @@ Personal skills packaged as a Claude plugin marketplace for Claude Code and the 
 | `stock-research` | `html-stock-report` | Formats completed stock research into standalone HTML and requests `stock-report-reviewer` inspection. |
 | `market-release-watch` | `market-release-watch` | Verifies U.S. economic releases, retries missing reports every three minutes, and uses a dedicated analyst to produce a 1–5 BUY/SELL/WAIT signal in a standalone HTML report. |
 | `market-conditions` | `market-conditions`, `market-context-integration`, `html-market-report` | Historical SIP/IEX benchmarks, primary macro evidence, a transparent market-backdrop rubric, optional attributed equity-research handoffs, standalone HTML and reviewer inspection. |
+| `options-pin-zone` | `max-pain-pin-zone` | Pulls an option chain for one ticker and expiration, computes max pain and the open interest map in code, and reports the likely pin zone, walls and alternate magnet. Works as pasted instructions in other chatbots too. Research only. |
 
-See [market-conditions setup and source limits](plugins/market-conditions/README.md).
+See [market-conditions setup and source limits](plugins/market-conditions/README.md) and [options-pin-zone setup, sharing and limits](plugins/options-pin-zone/README.md).
 
 ## Download the crypto starter
 
@@ -33,6 +34,7 @@ The starter includes the crypto plugin, MacBook and Windows setup instructions, 
 /plugin install stock-research@darren-skills
 /plugin install market-release-watch@darren-skills
 /plugin install market-conditions@darren-skills
+/plugin install options-pin-zone@darren-skills
 ```
 
 The skill triggers on its own when you ask for a Bible study, or run it directly with `/bible-study:morning-bible-study`.
@@ -190,6 +192,13 @@ plugins/
       references/signal-rubric.md    signal and evidence contract
       scripts/poll_plan.py          three-minute retry gate
       scripts/render_report.py      standalone HTML renderer
+  options-pin-zone/
+    plugin.json                     Codex manifest
+    .claude-plugin/plugin.json      Claude manifest
+    README.md                       setup, sharing with other chatbots, limits
+    skills/max-pain-pin-zone/
+      SKILL.md                      chain fetch, checks, judgment and output format
+      scripts/max_pain.py           max pain and open interest calculator
 .agents/plugins/marketplace.json   Codex catalog (all plugins)
 tests/                              unit tests (kept out of the skill so it stays lean)
 ```

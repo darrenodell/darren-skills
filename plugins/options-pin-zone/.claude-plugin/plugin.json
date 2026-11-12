@@ -1,0 +1,12 @@
+{
+  "name": "options-pin-zone",
+  "displayName": "Options Pin Zone",
+  "version": "1.0.0",
+  "description": "Max pain strike, open interest walls and likely pin zone for a ticker and option expiration. Research only; no trade execution.",
+  "author": {
+    "name": "Darren Odell"
+  },
+  "repository": "https://github.com/darrenodell/darren-skills",
+  "license": "MIT",
+  "keywords": ["options", "max-pain", "open-interest", "pin"]
+}
