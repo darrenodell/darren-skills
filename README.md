@@ -8,6 +8,7 @@ Personal skills packaged as a Claude plugin marketplace for Claude Code and the 
 |---|---|---|
 | `bible-study` | `morning-bible-study` | Writes a short daily Bible study (passage, reflection, two questions, prayer) with a BibleGateway link. A bundled script checks every candidate passage against a log so nothing repeats, including single verses from passages already used. |
 | `crypto-research` | `coinbase-research` | Fetches public Coinbase USD-pair data, validates daily candles, calculates indicators, and prepares buying research reports, standalone HTML companions, or ChatGPT upload packets. Python 3.10+; no API keys or order tools. |
+| `crypto-research` | `bounce-finder` | Scores how oversold each coin is, checks for reversal signals, and gives an entry trigger, stop, target and reward-to-risk for a possible short-term bounce. Same public data; no order tools. |
 | `crypto-research` | `html-research-report` | Formats completed research into an offline HTML report, then requests inspection by `report-reviewer`. |
 | `stock-research` | `alpaca-stock-research` | Uses Alpaca for validated stock/ETF snapshots, buying research, and an HTML/review handoff. Uses your own environment credentials. |
 | `stock-research` | `html-stock-report` | Formats completed stock research into standalone HTML and requests `stock-report-reviewer` inspection. |
@@ -137,7 +138,7 @@ python3 plugins/market-release-watch/skills/market-release-watch/scripts/render_
 
 ## HTML reports and inspection
 
-A normal buying-report request now runs `coinbase-research`, then the sibling `html-research-report` skill. It saves the original Markdown and a self-contained HTML companion with inline SVG price charts, source links, timestamps, and the full embedded snapshot. No remote fonts, assets, or JavaScript are required to read it. Source links require internet access.
+A normal buying-report request now runs `coinbase-research`, then the sibling `html-research-report` skill. It saves a concise Markdown brief and a self-contained HTML companion. The HTML opens with the bottom line, then shows one card per product that groups its price chart, verdict, key metrics, and entry and exit levels. Source links stay in the Markdown and are left out of the HTML. No remote fonts, assets, or JavaScript are required to read it.
 
 The `report-reviewer` agent checks the source data, content preservation, offline resources, and desktop/phone rendering before delivery. Claude Code can discover its agent definition in `agents/`; other hosts may need explicit delegation or can perform the same checklist directly. A review must say when visual or independent checks could not be performed. This is an explicit skill handoff, not a global hook. Request “Markdown only” to skip it.
 
@@ -163,6 +164,9 @@ plugins/
       SKILL.md                      research workflow
       report-prompt.md              report requirements
       scripts/fetch_snapshot.py     public Coinbase data collector
+    skills/bounce-finder/
+      SKILL.md                      oversold bounce workflow
+      report-prompt.md              bounce brief requirements
     skills/html-research-report/
       SKILL.md                      HTML and review handoff
       scripts/render_report.py      standalone HTML renderer
